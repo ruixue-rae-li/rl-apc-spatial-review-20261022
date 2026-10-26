@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Air pollution and consumption: spatial track - review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one row per slide — the slide large on the left, one stacked comment box per reviewer on the right; sticky bar with jump + counts. */
+:root {
+  --bg: #f3f4f7; --surface: #ffffff; --ink: #1b2233; --muted: #5d6578; --line: #d9dce5;
+  --accent: #23408e; --accent-soft: #e4e9f7;
+  --c0: #0f766e; --c0-soft: #e0f2ef;
+  --c1: #a14b06; --c1-soft: #fbeedd;
+  --c2: #6b3fa0; --c2-soft: #efe7f8;
+  --c3: #1d5fa8; --c3-soft: #e2edf9;
+  --c4: #a3264f; --c4-soft: #f8e3ea;
+  --c5: #4d6b12; --c5-soft: #ecf2df;
+  --guest: #4a5468; --guest-soft: #e8eaf0;
+  --ok: #2f7d32; --bad: #b42318;
+  --shadow: 0 1px 2px rgba(20,30,60,.06), 0 4px 14px rgba(20,30,60,.06);
+  --f-body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root {
+  --bg: #12151d; --surface: #1b2030; --ink: #e6e9f2; --muted: #9aa2b6; --line: #2e3548;
+  --accent: #9db4f5; --accent-soft: #263156;
+  --c0: #5ccfc2; --c0-soft: #16322f; --c1: #f0a35c; --c1-soft: #3a2a17; --c2: #c6a2f2; --c2-soft: #2e2440;
+  --c3: #8cbcf0; --c3-soft: #1a2b40; --c4: #f08cab; --c4-soft: #3b1d28; --c5: #b5d67a; --c5-soft: #27311a;
+  --guest: #b8c0d4; --guest-soft: #262c3a;
+  --ok: #7bc47f; --bad: #f2877c; --shadow: 0 1px 2px rgba(0,0,0,.3);
+  color-scheme: dark;
+} }
+* { box-sizing: border-box; }
+html, body { background: var(--bg); color: var(--ink); margin: 0; }
+body { font-family: var(--f-body); font-size: 15px; line-height: 1.45; }
+
+.bar { position: sticky; top: 0; z-index: 20; background: var(--bg); border-bottom: 1px solid var(--line); }
+.bar-in { max-width: 1720px; margin: 0 auto; padding: 10px 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; }
+.bar h1 { font-size: 17px; font-weight: 700; margin: 0; letter-spacing: -.01em; }
+.bar .sub { color: var(--muted); font-size: 13px; }
+.bar .grow { flex: 1 1 auto; }
+.ctrls { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; font-size: 13px; }
+.ctrls select, .ctrls .btn {
+  font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line);
+  border-radius: 6px; padding: 5px 8px; text-decoration: none;
+}
+.ctrls .btn:hover { border-color: var(--accent); }
+/* long slide titles make the jump menu wider than a phone screen */
+@media (max-width: 640px) { .ctrls { max-width: 100%; min-width: 0; } .ctrls select { width: 100%; } }
+.ctrls label { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+.counts { display: flex; gap: 6px; }
+.count { font-family: var(--f-mono); font-size: 12px; padding: 3px 8px; border-radius: 999px; font-variant-numeric: tabular-nums; color: var(--who); background: var(--who-soft); }
+
+.notice { max-width: 1720px; margin: 12px auto 0; padding: 0 20px; }
+.notice p { margin: 0; padding: 10px 14px; border-radius: 8px; font-size: 14px; background: var(--accent-soft); }
+.notice p.warn { background: color-mix(in srgb, var(--bad) 14%, var(--surface)); }
+
+main { max-width: 1720px; margin: 0 auto; padding: 18px 20px 80px; display: grid; gap: 22px; }
+.row { display: grid; grid-template-columns: minmax(0, 2.1fr) minmax(300px, 1fr); gap: 18px; align-items: start; scroll-margin-top: 80px; }
+.slide { margin: 0; min-width: 0; }
+.slide .zoom {
+  display: block; width: 100%; padding: 0; border: 1px solid var(--line); border-radius: 6px;
+  background: #fff; cursor: zoom-in; overflow: hidden; box-shadow: var(--shadow);
+}
+.slide .zoom:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.frame { position: relative; border-radius: 6px; }
+.hot { position: absolute; display: block; border-radius: 3px; cursor: pointer; }
+.hot:hover, .hot:focus-visible { outline: 2px solid var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); }
+.row.flash .frame { animation: flash 1.8s ease-out; }
+@keyframes flash { 0% { box-shadow: 0 0 0 5px var(--accent); } 100% { box-shadow: 0 0 0 5px transparent; } }
+@media (prefers-reduced-motion: reduce) { .row.flash .frame { animation: none; outline: 3px solid var(--accent); } }
+.slide img { display: block; width: 100%; height: auto; }
+.slide figcaption { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; margin-top: 6px; color: var(--muted); font-size: 13px; }
+.slide-link {
+  margin-left: auto; font-size: 12.5px; font-weight: 600; color: var(--surface); background: var(--accent);
+  border-radius: 6px; padding: 4px 10px; text-decoration: none; white-space: nowrap;
+}
+.slide-link:hover { filter: brightness(1.1); }
+.slide-link:focus-visible { outline: 3px solid var(--accent-soft); outline-offset: 2px; }
+.num { font-family: var(--f-mono); font-size: 12px; color: var(--accent); font-variant-numeric: tabular-nums; }
+.has-notes .num::after { content: " \25CF"; color: var(--accent); }
+
+.notes { display: grid; gap: 10px; min-width: 0; }
+.box { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px 6px; display: grid; gap: 4px; }
+.box:focus-within { border-color: var(--who); box-shadow: 0 0 0 2px var(--who-soft); }
+.box-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.chip { font-family: var(--f-mono); font-size: 12px; letter-spacing: .06em; padding: 2px 8px; border-radius: 4px; color: var(--who); background: var(--who-soft); }
+.status { font-size: 12px; color: var(--muted); text-align: right; }
+.status.saved { color: var(--ok); }
+.status.error { color: var(--bad); }
+.box textarea {
+  font: inherit; font-size: 14.5px; color: var(--ink); background: transparent; border: 0; resize: vertical;
+  width: 100%; min-height: 4.6em; padding: 4px 0; outline: none; line-height: 1.45;
+}
+.box textarea::placeholder { color: var(--muted); opacity: .7; }
+.box textarea:disabled { cursor: progress; }
+.meta { font-size: 12px; color: var(--muted); min-height: 1.2em; }
+
+.thread { display: grid; gap: 6px; }
+.thread:empty { display: none; }
+.reply {
+  border-left: 3px solid var(--who); padding: 4px 8px 5px; border-radius: 0 6px 6px 0;
+  background: color-mix(in srgb, var(--who-soft) 60%, transparent);
+}
+.reply-head { display: flex; gap: 8px; align-items: center; font-size: 12px; color: var(--muted); }
+.reply-head .grow { flex: 1; }
+.chip.sm { font-size: 11px; padding: 1px 6px; }
+.reply-text { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14px; margin-top: 2px; }
+.linkbtn { font: inherit; font-size: 12.5px; background: none; border: 0; color: var(--accent); cursor: pointer; padding: 2px 0; justify-self: start; }
+.linkbtn:hover { text-decoration: underline; }
+.del { font-size: 12px; color: var(--muted); }
+.del.confirm { color: var(--bad); font-weight: 600; }
+.composer { display: grid; gap: 6px; border-top: 1px dashed var(--line); padding-top: 8px; }
+.box .composer textarea { min-height: 3.4em; border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; background: var(--bg); }
+.box .composer textarea:focus { border-color: var(--accent); }
+.composer-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 12.5px; color: var(--muted); }
+.composer-row .grow { flex: 1; }
+.composer select, .composer button { font: inherit; font-size: 12.5px; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.composer select { color: var(--ink); background: var(--surface); border: 1px solid var(--line); padding: 3px 6px; }
+.btn-primary { background: var(--accent); color: var(--surface); border: 1px solid var(--accent); }
+.btn-primary:disabled { opacity: .6; cursor: progress; }
+.btn-plain { background: none; color: var(--ink); border: 1px solid var(--line); }
+.whoami { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; color: var(--muted); }
+.whoami .chip { font-size: 12px; }
+
+.landing {
+  position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 16px;
+  background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: blur(6px);
+}
+.landing-card {
+  width: min(520px, 100%); background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+  box-shadow: 0 10px 40px rgba(20,30,60,.18); padding: 28px 26px 20px; display: grid; gap: 14px; text-align: center;
+}
+.landing-card .deck { font-size: 13px; color: var(--muted); }
+.landing-card h2 { margin: 0; font-size: 24px; letter-spacing: -.01em; }
+.landing-card p { margin: 0; color: var(--muted); font-size: 14px; }
+.who-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 6px; }
+.who-btn {
+  font-family: var(--f-mono); font-size: 22px; letter-spacing: .06em; min-width: 104px; padding: 16px 14px 12px;
+  border-radius: 12px; border: 2px solid var(--who); background: var(--who-soft); color: var(--who); cursor: pointer;
+  display: grid; gap: 2px;
+}
+.who-btn small { font-family: var(--f-body); font-size: 12px; letter-spacing: 0; color: var(--muted); }
+.who-btn:hover, .who-btn:focus-visible { background: var(--who); color: var(--surface); outline: none; }
+.who-btn:hover small, .who-btn:focus-visible small { color: var(--surface); }
+.landing .linkbtn { justify-self: center; color: var(--muted); }
+.who-btn.guest-btn { font-family: var(--f-body); font-size: 16px; letter-spacing: 0; align-content: center; }
+.guest-form { display: grid; gap: 8px; text-align: left; border-top: 1px dashed var(--line); padding-top: 12px; }
+.guest-form label { font-size: 13px; color: var(--muted); }
+.guest-form .row2 { display: flex; gap: 8px; }
+.guest-form input {
+  flex: 1; min-width: 0; font: inherit; font-size: 15px; color: var(--ink); background: var(--bg);
+  border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px;
+}
+.guest-form input:focus { outline: none; border-color: var(--accent); }
+.guest-form .btn-primary { font: inherit; font-size: 14px; border-radius: 8px; padding: 8px 14px; cursor: pointer; }
+.guest-msg { font-size: 12.5px; color: var(--bad); }
+.guest-msg:empty { display: none; }
+
+.box.others { border-style: dashed; padding-bottom: 8px; }
+.box.others .hint { font-size: 12px; color: var(--muted); }
+.chip.name { font-family: var(--f-body); letter-spacing: 0; font-weight: 600; }
+.composer-status { font-size: 12px; color: var(--bad); }
+.composer-status:empty { display: none; }
+
+.lb { position: fixed; inset: 0; z-index: 50; background: rgba(8,10,16,.92); display: grid; grid-template-rows: auto 1fr; }
+.lb-bar { display: flex; gap: 12px; align-items: center; padding: 10px 16px; color: #e6e9f2; font-size: 14px; }
+.lb-bar .grow { flex: 1; }
+.lb-bar button { font: inherit; color: #e6e9f2; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.2); border-radius: 6px; padding: 5px 12px; cursor: pointer; }
+.lb-img { overflow: auto; display: grid; place-items: center; padding: 0 16px 16px; }
+.lb-frame { position: relative; display: inline-block; line-height: 0; max-width: 100%; }
+.lb-frame .hot:hover, .lb-frame .hot:focus-visible { outline-color: #9db4f5; background: rgba(157,180,245,.18); }
+.lb-img img { max-width: 100%; max-height: calc(100vh - 70px); width: auto; height: auto; background: #fff; cursor: zoom-in; }
+.lb-img.full .lb-frame { max-width: none; }
+.lb-img.full img { max-width: none; max-height: none; cursor: zoom-out; }
+
+@media (max-width: 980px) { .row { grid-template-columns: minmax(0, 1fr); } .notes { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); } }
+@media (max-width: 640px) { .notes { grid-template-columns: minmax(0, 1fr); } .bar-in, main, .notice { padding-left: 16px; padding-right: 16px; } }
+[hidden] { display: none !important; }
+
+/* ---- chat with Claude (only with a personal chat link) ---- */
+/* The button sits at the right end of the sticky top bar, and the panel opens from the top right:
+   the bottom-right corner is taken by Netlify's own popup. */
+.chat-fab {
+  display: inline-flex; align-items: center; gap: 7px;
+  font: inherit; font-weight: 600; font-size: 13px; color: var(--surface); background: var(--accent);
+  border: 0; border-radius: 999px; padding: 6px 13px; cursor: pointer;
+}
+.bar-in { position: relative; }
+.bar-in > .chat-fab { position: absolute; top: 10px; right: 20px; }
+.bar-in:has(> .chat-fab:not([hidden])) { padding-right: 200px; }
+@media (max-width: 640px) {
+  .bar-in > .chat-fab { right: 16px; }
+  .bar-in:has(> .chat-fab:not([hidden])) { padding-right: 16px; }
+  .bar-in:has(> .chat-fab:not([hidden])) > div:first-child { padding-right: 160px; }
+}
+.chat-fab:focus-visible { outline: 3px solid var(--accent-soft); outline-offset: 2px; }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: #9aa2b6; display: inline-block; }
+.dot.on { background: #34c759; }
+.badge-n { min-width: 18px; height: 18px; border-radius: 9px; background: var(--bad); color: #fff; font-size: 11px;
+  display: inline-grid; place-items: center; padding: 0 5px; }
+.chat {
+  position: fixed; right: 18px; top: 12px; z-index: 56; width: min(420px, calc(100vw - 36px));
+  height: min(640px, calc(100vh - 36px)); display: grid; grid-template-rows: auto 1fr auto;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 12px 40px rgba(20,30,60,.28);
+  overflow: hidden;
+}
+.chat-head { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+.chat-head .t { font-weight: 700; }
+.chat-head .s { font-size: 12px; color: var(--muted); }
+.chat-head .grow { flex: 1; }
+.chat-head button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; font-size: 18px; line-height: 1; padding: 4px; }
+.chat-log { overflow-y: auto; padding: 12px 14px; display: grid; gap: 10px; align-content: start; }
+.chat-empty { color: var(--muted); font-size: 13.5px; line-height: 1.5; }
+.msg { display: grid; gap: 3px; max-width: 92%; }
+.msg.mine { justify-self: end; }
+.msg .h { display: flex; gap: 6px; align-items: baseline; font-size: 11.5px; color: var(--muted); }
+.msg .h b { color: var(--ink); font-weight: 600; }
+.msg .body { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14px; line-height: 1.45; padding: 7px 10px;
+  border-radius: 10px; background: var(--bg); border: 1px solid var(--line); }
+.msg.claude .body { background: var(--accent-soft); border-color: transparent; }
+.msg .st { font-size: 11.5px; color: var(--muted); }
+.msg .st.work { color: var(--accent); }
+.msg .st.wait { color: var(--bad); }
+.chat-form { border-top: 1px solid var(--line); padding: 10px 12px; display: grid; gap: 6px; }
+.chat-form textarea { font: inherit; font-size: 14px; color: var(--ink); background: var(--bg); border: 1px solid var(--line);
+  border-radius: 8px; padding: 8px 10px; resize: none; min-height: 3.2em; max-height: 9em; }
+.chat-form textarea:focus { outline: none; border-color: var(--accent); }
+.chat-form .row3 { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); }
+.chat-form .row3 .grow { flex: 1; }
+.chat-form label { display: inline-flex; gap: 5px; align-items: center; cursor: pointer; }
+.chat-form button { font: inherit; font-size: 13px; font-weight: 600; color: var(--surface); background: var(--accent);
+  border: 0; border-radius: 8px; padding: 6px 14px; cursor: pointer; }
+.chat-form button:disabled { opacity: .6; cursor: progress; }
+.chat-note { font-size: 12px; color: var(--bad); }
+.chat-note:empty { display: none; }
+@media (max-width: 640px) { .chat { right: 8px; bottom: 8px; width: calc(100vw - 16px); height: calc(100vh - 16px); } }
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="bar-in">
+    <div>
+      <h1 id="h1"></h1>
+      <div class="sub"><span id="subtitle"></span> · <span id="nslides"></span> slides · comments save as you type</div>
+    </div>
+    <div class="grow"></div>
+    <div class="ctrls">
+      <select id="jump" aria-label="Jump to slide"></select>
+      <label><input type="checkbox" id="onlyNotes"> Only slides with comments</label>
+      <a class="btn" id="pdfLink" target="_blank" rel="noopener">Open PDF</a>
+      <span class="whoami" id="whoami"></span>
+      <div class="counts" id="counts"></div>
+    </div>
+    <button type="button" class="chat-fab" id="chatFab" hidden aria-haspopup="dialog">
+      <span class="dot" id="chatDot"></span> Chat with Claude <span class="badge-n" id="chatBadge" hidden></span>
+    </button>
+  </div>
+</header>
+<div class="notice" id="notice"><p>Loading comments…</p></div>
+<main id="rows"></main>
+
+<div class="landing" id="landing" role="dialog" aria-modal="true" aria-labelledby="landingTitle" hidden>
+  <div class="landing-card">
+    <div class="deck" id="landingDeck"></div>
+    <h2 id="landingTitle">Who's reviewing?</h2>
+    <p>Pick your initials, or choose <b>Someone else</b> and enter your name. Your comments will be signed with it, and this browser will remember.</p>
+    <div class="who-grid" id="whoGrid"></div>
+    <form class="guest-form" id="guestForm" hidden>
+      <label for="guestName">Your name</label>
+      <div class="row2">
+        <input id="guestName" maxlength="60" autocomplete="name" placeholder="e.g. Jane Doe">
+        <button type="submit" class="btn-primary">Continue</button>
+      </div>
+      <div class="guest-msg" id="guestMsg" aria-live="polite"></div>
+    </form>
+    <button type="button" class="linkbtn" id="justBrowsing">Just browsing</button>
+  </div>
+</div>
+
+<section class="chat" id="chatPanel" role="dialog" aria-label="Chat with Claude" hidden>
+  <div class="chat-head">
+    <span class="dot" id="chatDot2"></span>
+    <div><div class="t">Chat with Claude</div><div class="s" id="chatState">Checking…</div></div>
+    <span class="grow"></span>
+    <button type="button" id="chatClose" aria-label="Close chat">×</button>
+  </div>
+  <div class="chat-log" id="chatLog" aria-live="polite"></div>
+  <form class="chat-form" id="chatForm">
+    <textarea id="chatInput" rows="2" placeholder="Ask a question or request a change to the slides"></textarea>
+    <div class="row3">
+      <label><input type="checkbox" id="chatSlideOn" checked> About slide <span id="chatSlideN">1</span></label>
+      <span class="grow"></span>
+      <button type="submit" id="chatSend">Send</button>
+    </div>
+    <div class="chat-note" id="chatNote"></div>
+  </form>
+</section>
+
+<div class="lb" id="lb" hidden>
+  <div class="lb-bar">
+    <span id="lbTitle"></span><span class="grow"></span>
+    <button type="button" id="lbPrev">← Prev</button>
+    <button type="button" id="lbNext">Next →</button>
+    <button type="button" id="lbClose">Close (Esc)</button>
+  </div>
+  <div class="lb-img" id="lbImg"><div class="lb-frame" id="lbFrame"><img alt=""></div></div>
+</div>
+
+<script>
+// Filled in by build_review.py.
+const CONFIG = {"TITLE": "Air pollution and consumption: spatial track", "SUBTITLE": "Slides of 22 Oct 2026 (spatial-track, 02649e5)", "SLIDES": ["Title page", "Question and answer", "City as one time series", "City series: OLS in levels (main)", "Residuals", "Three instruments for the city series", "Reduced form: city spending on the instruments", "Checks from the new papers", "City local projections: leads move too", "Neighborhood panel", "Data", "Rings around three example neighborhoods", "Where residents spend", "Pollution varies over time, not across neighborhoods", "Design", "First stage: wind moves pollution, more so on windy days", "Without instruments: nothing moves", "Headline: away-from-home spending falls relative to home + online", "Distance bands instead of rings: same picture", "With the IV: a shift online, not a shorter shopping trip", "Level effects fail the placebo: leads look like the effect", "Exclusion check: reduced form vs. first stage by sector", "The relative outcomes show the same lead pattern", "Robustness of the main estimates", "Inference: clustering by date is what matters", "Who shifts", "Takeaways and next steps", "Backup: spending levels by ring", "Backup: alternative instruments", "Backup: cumulative local projections and exposure measures"], "BOXES": ["RL", "WK", "SR"], "API": "https://script.google.com/macros/s/AKfycbza8u3hLQNXp98_9e495MHiflPfgKQNJTJlEtXidDBT6x0hS0AKGH8PqC9uVVSh0XHONg/exec", "PDF": "spatial_slides.pdf", "IMG_W": 2520, "IMG_H": 1418, "LINKS": {}, "NAMES": {}, "SLIDE_LINKS": {}};
+const { SLIDES, BOXES, API, PDF, IMG_W } = CONFIG;
+const POLL_MS = 8000;
+const pad = n => String(n).padStart(2, "0");
+const keyOf = (n, b) => `s${pad(n)}-${b}`;
+const othersKey = n => `s${pad(n)}-others`;
+const imgOf = n => `slides/p-${pad(n)}.png`;
+const whoVars = b => { const i = Math.max(0, BOXES.indexOf(b)) % 6; return `--who: var(--c${i}); --who-soft: var(--c${i}-soft);`; };
+
+// Comments live in a Google Sheet behind this Apps Script endpoint. Requests omit
+// cookies, so whatever Google accounts the viewer is signed in to never matter.
+const api = {
+  async getComments() {
+    const r = await fetch(API + "?format=json&t=" + Date.now(), { credentials: "omit", cache: "no-store" });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const j = await r.json(), comments = {}, replies = {};
+    j.comments.forEach(c => {
+      if (c.parent) (replies[c.parent] = replies[c.parent] || []).push({ key: c.key, author: c.author, text: c.text, at: c.at });
+      else comments[c.key] = { text: c.text, at: c.at };
+    });
+    return { comments, replies };
+  },
+  async post(body, keepalive) {
+    const r = await fetch(API, {
+      method: "POST", credentials: "omit", keepalive: !!keepalive,
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(body)
+    });
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.error || "request failed");
+    return j;
+  },
+  saveComment(key, text, title) { return api.post({ key, text, title }, text.length < 50000); },
+  addReply(parent, author, text, title) { return api.post({ op: "reply", parent, author, text, title }); },
+  deleteReply(key) { return api.post({ op: "delete", key }); }
+};
+
+// Who is reviewing: there are no logins, so a landing screen asks once and this browser
+// remembers. A personal link ?as=MN skips the question. "Someone else" signs with a typed name.
+const AUTHOR_KEY = "deck-review-author";
+const NAMES = CONFIG.NAMES || {};
+const isReviewer = a => BOXES.includes(a);
+const authorVars = a => isReviewer(a) ? whoVars(a) : "--who: var(--guest); --who-soft: var(--guest-soft);";
+const cleanName = s => String(s || "").trim().replace(/\s+/g, " ");
+const validName = s => !!s && s.length <= 60 && !/[\u0000-\u001f<>]/.test(s);
+function storedAuthor() {
+  try { const a = localStorage.getItem(AUTHOR_KEY); if (isReviewer(a) || validName(a)) return a; } catch (e) {}
+  return null;
+}
+function setAuthor(a) { try { localStorage.setItem(AUTHOR_KEY, a); } catch (e) {} }
+const asParam = new URLSearchParams(location.search).get("as");
+let me = BOXES.find(b => asParam && b.toLowerCase() === asParam.toLowerCase()) || storedAuthor();
+if (me) setAuthor(me);
+let afterChoose = null;   // what to do once someone picks (e.g. open the reply form they clicked)
+
+function renderWhoami() {
+  const w = document.getElementById("whoami"); w.innerHTML = "";
+  const change = document.createElement("button"); change.type = "button"; change.className = "linkbtn";
+  if (me) {
+    const chip = document.createElement("span"); chip.className = isReviewer(me) ? "chip" : "chip name";
+    chip.style.cssText = authorVars(me); chip.textContent = me;
+    change.textContent = "Change";
+    w.append(isReviewer(me) ? "Reviewing as" : "Commenting as", chip, change);
+  } else {
+    change.textContent = "Choose who you are";
+    w.append(change);
+  }
+  change.addEventListener("click", () => openLanding(null));
+  document.querySelectorAll(".as-who").forEach(el => {
+    el.textContent = me || "?"; el.style.cssText = authorVars(me);
+    el.classList.toggle("name", !!me && !isReviewer(me));
+  });
+}
+function openLanding(then) {
+  afterChoose = then;
+  document.getElementById("landing").hidden = false;
+  document.getElementById("guestForm").hidden = true;
+  document.getElementById("guestMsg").textContent = "";
+  const first = document.querySelector(".who-btn"); if (first) first.focus();
+}
+function choose(b) {
+  me = b; setAuthor(b);
+  document.getElementById("landing").hidden = true;
+  renderWhoami();
+  const f = afterChoose; afterChoose = null; if (f) f();
+}
+(function setupLanding() {
+  document.getElementById("landingDeck").textContent = CONFIG.TITLE;
+  const grid = document.getElementById("whoGrid");
+  BOXES.forEach(b => {
+    const btn = document.createElement("button"); btn.type = "button"; btn.className = "who-btn"; btn.style.cssText = whoVars(b);
+    btn.append(b);
+    if (NAMES[b]) { const s = document.createElement("small"); s.textContent = NAMES[b]; btn.append(s); }
+    btn.addEventListener("click", () => choose(b));
+    grid.append(btn);
+  });
+  const guestBtn = document.createElement("button"); guestBtn.type = "button"; guestBtn.className = "who-btn guest-btn";
+  guestBtn.style.cssText = authorVars(null); guestBtn.textContent = "Someone else";
+  const guestForm = document.getElementById("guestForm"), guestName = document.getElementById("guestName");
+  const guestMsg = document.getElementById("guestMsg");
+  guestBtn.addEventListener("click", () => {
+    guestForm.hidden = false;
+    if (me && !isReviewer(me)) guestName.value = me;
+    guestName.focus();
+  });
+  grid.append(guestBtn);
+  guestForm.addEventListener("submit", e => {
+    e.preventDefault();
+    const name = cleanName(guestName.value);
+    if (!name) { guestMsg.textContent = "Please type your name."; guestName.focus(); return; }
+    if (BOXES.some(b => b.toLowerCase() === name.toLowerCase())) {
+      guestMsg.textContent = `${name.toUpperCase()} is a reviewer. If that's you, pick that button above; otherwise use your full name.`; return;
+    }
+    if (!validName(name)) { guestMsg.textContent = "Please use up to 60 characters, without < or >."; return; }
+    guestMsg.textContent = "";
+    choose(name);
+  });
+  document.getElementById("justBrowsing").addEventListener("click", () => {
+    document.getElementById("landing").hidden = true; afterChoose = null;
+  });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && !document.getElementById("landing").hidden) { document.getElementById("landing").hidden = true; afterChoose = null; }
+  });
+  if (!me) document.getElementById("landing").hidden = false;
+})();
+
+const st = { docs: {}, dirty: {}, timers: {}, chains: {}, localAt: {}, loaded: false,
+             replies: {}, localReplies: {}, deleted: new Set() };
+const els = {};
+
+// ---------- links inside the slides ----------
+// The PDF's link areas (contents entries, backup/return buttons, URLs), laid over
+// the slide image as transparent hotspots. Slide links go through #sNN, so the
+// browser's Back button returns to where the reader was.
+const LINKS = CONFIG.LINKS || {};
+const SLIDE_LINKS = CONFIG.SLIDE_LINKS || {};   // {slide: [{label, url}]}
+function addSpots(container, n, inLightbox) {
+  container.querySelectorAll(".hot").forEach(a => a.remove());
+  (LINKS[n] || []).forEach(([x, y, w, h, target]) => {
+    const a = document.createElement("a"); a.className = "hot";
+    a.style.cssText = `left:${x * 100}%;top:${y * 100}%;width:${w * 100}%;height:${h * 100}%`;
+    if (typeof target === "number") {
+      a.href = "#s" + pad(target);
+      a.title = `Go to slide ${target}: ${SLIDES[target - 1]}`;
+      a.addEventListener("click", e => {
+        if (inLightbox) { e.preventDefault(); openLb(target); return; }
+        const row = document.getElementById("s" + pad(target));
+        if (row && row.hidden) { document.getElementById("onlyNotes").checked = false; applyFilter(); }
+        if (location.hash === a.getAttribute("href")) { e.preventDefault(); row.scrollIntoView(); flash(row); }
+      });
+    } else {
+      a.href = target; a.target = "_blank"; a.rel = "noopener"; a.title = target;
+    }
+    a.setAttribute("aria-label", a.title);
+    container.append(a);
+  });
+}
+function flash(row) { row.classList.remove("flash"); void row.offsetWidth; row.classList.add("flash"); }
+function flashFromHash() {
+  const m = location.hash.match(/^#s(\d+)$/); if (!m) return;
+  const row = document.getElementById("s" + pad(+m[1])); if (row) flash(row);
+}
+window.addEventListener("hashchange", flashFromHash);
+
+// ---------- static render ----------
+document.getElementById("h1").textContent = CONFIG.TITLE;
+document.getElementById("subtitle").textContent = CONFIG.SUBTITLE;
+document.getElementById("nslides").textContent = SLIDES.length;
+const pdfLink = document.getElementById("pdfLink");
+if (PDF) pdfLink.href = PDF; else pdfLink.hidden = true;
+const rowsEl = document.getElementById("rows");
+const jump = document.getElementById("jump");
+SLIDES.forEach((title, i) => {
+  const n = i + 1;
+  const row = document.createElement("section");
+  row.className = "row"; row.id = "s" + pad(n);
+  const fig = document.createElement("figure"); fig.className = "slide";
+  const btn = document.createElement("button"); btn.type = "button"; btn.className = "zoom";
+  btn.setAttribute("aria-label", `Enlarge slide ${n}`);
+  const img = document.createElement("img"); img.alt = `Slide ${n}: ${title}`;
+  img.src = imgOf(n); img.width = CONFIG.IMG_W; img.height = CONFIG.IMG_H;
+  img.loading = n <= 3 ? "eager" : "lazy"; img.decoding = "async";
+  btn.append(img); btn.addEventListener("click", () => openLb(n));
+  const frame = document.createElement("div"); frame.className = "frame";
+  frame.append(btn); addSpots(frame, n, false);
+  const cap = document.createElement("figcaption");
+  const num = document.createElement("span"); num.className = "num"; num.textContent = `Slide ${n}`;
+  const t = document.createElement("span"); t.textContent = title;
+  cap.append(num, t); fig.append(frame, cap);
+  // extra buttons under a slide (review.json "slide_links"), e.g. a link to a comparison page
+  (SLIDE_LINKS[n] || []).forEach(({ label, url }) => {
+    const a = document.createElement("a"); a.className = "slide-link";
+    a.href = url; a.target = "_blank"; a.rel = "noopener noreferrer"; a.textContent = label + " ↗";
+    cap.append(a);
+  });
+
+  const notes = document.createElement("div"); notes.className = "notes";
+  BOXES.forEach(b => {
+    const k = keyOf(n, b);
+    const box = document.createElement("div"); box.className = "box"; box.style.cssText = whoVars(b);
+    const head = document.createElement("div"); head.className = "box-head";
+    const lab = document.createElement("label"); lab.htmlFor = "ta-" + k;
+    const chip = document.createElement("span"); chip.className = "chip"; chip.textContent = b;
+    lab.append(chip);
+    const status = document.createElement("span"); status.className = "status"; status.setAttribute("aria-live", "polite");
+    head.append(lab, status);
+    const ta = document.createElement("textarea");
+    ta.id = "ta-" + k; ta.rows = 3; ta.placeholder = `${b}'s comments on slide ${n}`; ta.disabled = true;
+    ta.addEventListener("input", () => { st.dirty[k] = true; setStatus(k, "", "Editing…"); grow(ta); schedule(k); });
+    ta.addEventListener("blur", () => flush(k));
+    const meta = document.createElement("div"); meta.className = "meta";
+    const thread = document.createElement("div"); thread.className = "thread";
+    const replyBtn = document.createElement("button"); replyBtn.type = "button"; replyBtn.className = "linkbtn"; replyBtn.textContent = "Reply";
+    const composer = buildComposer(k, n, b, replyBtn);
+    const openComposer = () => { replyBtn.hidden = true; composer.form.hidden = false; composer.ta.focus(); };
+    replyBtn.addEventListener("click", () => { if (me) openComposer(); else openLanding(openComposer); });
+    box.append(head, ta, meta, thread, replyBtn, composer.form); notes.append(box);
+    els[k] = { ta, status, meta, thread, replyBtn, sig: "" };
+  });
+
+  // Others: one running list per slide; anyone adds entries, each signed with a name or initials.
+  const ok = othersKey(n);
+  const obox = document.createElement("div"); obox.className = "box others"; obox.style.cssText = authorVars(null);
+  const ohead = document.createElement("div"); ohead.className = "box-head";
+  const ochip = document.createElement("span"); ochip.className = "chip name"; ochip.textContent = "Others";
+  const hint = document.createElement("span"); hint.className = "hint"; hint.textContent = "Comments from anyone else";
+  ohead.append(ochip, hint);
+  const othread = document.createElement("div"); othread.className = "thread";
+  const addBtn = document.createElement("button"); addBtn.type = "button"; addBtn.className = "linkbtn"; addBtn.textContent = "Add a comment";
+  const ocomp = buildComposer(ok, n, null, addBtn);
+  const openOthers = () => { addBtn.hidden = true; ocomp.form.hidden = false; ocomp.ta.focus(); };
+  addBtn.addEventListener("click", () => { if (me) openOthers(); else openLanding(openOthers); });
+  obox.append(ohead, othread, addBtn, ocomp.form); notes.append(obox);
+  els[ok] = { thread: othread, replyBtn: addBtn, sig: "" };
+
+  row.append(fig, notes); rowsEl.append(row);
+  const o = document.createElement("option"); o.value = n; o.textContent = `${n}. ${title}`; jump.append(o);
+});
+jump.addEventListener("change", () => document.getElementById("s" + pad(jump.value)).scrollIntoView({ behavior: "smooth" }));
+renderWhoami();
+if (/^#s\d+$/.test(location.hash)) {   // opened from a shared #sNN link: rows exist only now
+  const row = document.getElementById("s" + pad(+location.hash.slice(2)));
+  if (row) { row.scrollIntoView(); flash(row); }
+}
+document.getElementById("onlyNotes").addEventListener("change", applyFilter);
+
+function grow(ta) { ta.style.height = "auto"; ta.style.height = Math.max(ta.scrollHeight + 2, 70) + "px"; }
+function setStatus(k, cls, text) { const s = els[k].status; s.className = "status " + cls; s.textContent = text; }
+function notice(text, warn) {
+  const box = document.getElementById("notice");
+  if (!text) { box.hidden = true; return; }
+  box.hidden = false; box.innerHTML = ""; const p = document.createElement("p");
+  if (warn) p.className = "warn"; p.textContent = text; box.append(p);
+}
+
+// ---------- replies ----------
+// b = the reviewer whose box this replies to, or null for the slide's Others list.
+function buildComposer(k, n, b, replyBtn) {
+  const sendLabel = b ? "Post reply" : "Post comment";
+  const form = document.createElement("form"); form.className = "composer"; form.hidden = true;
+  const ta = document.createElement("textarea"); ta.id = "rp-" + k; ta.rows = 2;
+  ta.placeholder = b ? `Reply to ${b} on slide ${n}` : `Comment on slide ${n}`; ta.setAttribute("aria-label", ta.placeholder);
+  const row = document.createElement("div"); row.className = "composer-row";
+  const lab = document.createElement("span"); lab.textContent = b ? "Replying as " : "Commenting as ";
+  const whoChip = document.createElement("span"); whoChip.className = "chip sm as-who" + (me && !isReviewer(me) ? " name" : "");
+  whoChip.textContent = me || "?"; whoChip.style.cssText = authorVars(me);
+  lab.append(whoChip);
+  const grow = document.createElement("span"); grow.className = "grow";
+  const cancel = document.createElement("button"); cancel.type = "button"; cancel.className = "btn-plain"; cancel.textContent = "Cancel";
+  const send = document.createElement("button"); send.type = "submit"; send.className = "btn-primary"; send.textContent = sendLabel;
+  row.append(lab, grow, cancel, send);
+  const msg = document.createElement("div"); msg.className = "composer-status"; msg.setAttribute("aria-live", "polite");
+  form.append(ta, row, msg);
+  const close = () => { form.hidden = true; replyBtn.hidden = false; msg.textContent = ""; };
+  cancel.addEventListener("click", () => { ta.value = ""; close(); });
+  ta.addEventListener("keydown", e => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) form.requestSubmit(); });
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+    const text = ta.value;
+    if (!text.trim()) { ta.focus(); return; }
+    if (!me) { openLanding(() => form.requestSubmit()); return; }
+    const author = me;
+    send.disabled = true; send.textContent = "Posting…"; msg.textContent = "";
+    try {
+      const r = await api.addReply(k, author, text, SLIDES[n - 1]);
+      st.localReplies[r.key] = { parent: k, key: r.key, author, text, at: r.at };
+      (st.replies[k] = st.replies[k] || []).push({ key: r.key, author, text, at: r.at });
+      ta.value = ""; close(); render();
+    } catch (err) {
+      msg.textContent = "Not posted. Check your connection and try again; your text is still here.";
+    } finally { send.disabled = false; send.textContent = sendLabel; }
+  });
+  return { form, ta };
+}
+
+function renderThread(k) {
+  const e = els[k], list = (st.replies[k] || []).slice().sort((a, b) => a.at < b.at ? -1 : 1);
+  const sig = list.map(r => r.key + "|" + r.text).join("\n");
+  if (sig === e.sig) return;
+  e.sig = sig; e.thread.innerHTML = "";
+  list.forEach(r => {
+    const item = document.createElement("div"); item.className = "reply"; item.style.cssText = authorVars(r.author);
+    const head = document.createElement("div"); head.className = "reply-head";
+    const chip = document.createElement("span"); chip.className = isReviewer(r.author) ? "chip sm" : "chip sm name";
+    chip.textContent = r.author;
+    const when = document.createElement("span"); when.textContent = fmt(r.at);
+    const grow = document.createElement("span"); grow.className = "grow";
+    const del = document.createElement("button"); del.type = "button"; del.className = "linkbtn del"; del.textContent = "Delete";
+    let armed = null;
+    del.addEventListener("click", async () => {
+      if (!armed) {   // first click arms, second click within 4 s deletes
+        del.classList.add("confirm"); del.textContent = "Click again to delete";
+        armed = setTimeout(() => { armed = null; del.classList.remove("confirm"); del.textContent = "Delete"; }, 4000);
+        return;
+      }
+      clearTimeout(armed); del.disabled = true; del.textContent = "Deleting…";
+      try {
+        await api.deleteReply(r.key);
+        st.deleted.add(r.key); delete st.localReplies[r.key];
+        st.replies[k] = (st.replies[k] || []).filter(x => x.key !== r.key); render();
+      } catch (err) { del.disabled = false; del.classList.remove("confirm"); del.textContent = "Not deleted. Try again"; armed = null; }
+    });
+    head.append(chip, when, grow, del);
+    const body = document.createElement("div"); body.className = "reply-text"; body.textContent = r.text;
+    item.append(head, body); e.thread.append(item);
+  });
+}
+
+// ---------- saving ----------
+function schedule(k) { clearTimeout(st.timers[k]); st.timers[k] = setTimeout(() => flush(k), 900); }
+function flush(k) {
+  clearTimeout(st.timers[k]);
+  if (!st.loaded || !st.dirty[k]) return;
+  const n = +k.match(/^s(\d+)-/)[1];
+  st.chains[k] = (st.chains[k] || Promise.resolve()).then(async () => {
+    const text = els[k].ta.value;
+    if ((st.docs[k]?.text ?? "") === text) { if (els[k].ta.value === text) st.dirty[k] = false; setStatus(k, "saved", "Saved"); return; }
+    setStatus(k, "", "Saving…");
+    try {
+      const r = await api.saveComment(k, text, SLIDES[n - 1]);
+      st.docs[k] = { text, at: r.at }; st.localAt[k] = r.at;
+      if (els[k].ta.value === text) st.dirty[k] = false;
+      setStatus(k, "saved", "Saved"); render();
+    } catch (e) {
+      setStatus(k, "error", "Not saved. Keep typing to retry, or copy your text.");
+    }
+  });
+}
+window.addEventListener("pagehide", () => Object.keys(st.dirty).forEach(k => st.dirty[k] && flush(k)));
+
+// ---------- loading + polling ----------
+const fmt = iso => { try { return new Date(iso).toLocaleString(undefined, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }); } catch (e) { return ""; } };
+function render() {
+  const counts = { Others: 0 }; BOXES.forEach(b => { counts[b] = 0; });
+  const tally = list => list.forEach(r => { counts[isReviewer(r.author) ? r.author : "Others"]++; });
+  SLIDES.forEach((_, i) => {
+    const n = i + 1; let any = false;
+    const oreps = st.replies[othersKey(n)] || [];
+    if (oreps.length) any = true;
+    tally(oreps); renderThread(othersKey(n));
+    BOXES.forEach(b => {
+      const k = keyOf(n, b), d = st.docs[k], e = els[k];
+      const text = d ? d.text : "";
+      if (text.trim()) { any = true; counts[b]++; }
+      const reps = st.replies[k] || [];
+      if (reps.length) any = true;
+      tally(reps);
+      renderThread(k);
+      if (!st.dirty[k] && e.ta.value !== text) {
+        const focused = document.activeElement === e.ta, s = e.ta.selectionStart, en = e.ta.selectionEnd;
+        e.ta.value = text; grow(e.ta);
+        if (focused) { try { e.ta.setSelectionRange(Math.min(s, text.length), Math.min(en, text.length)); } catch (x) {} }
+      }
+      e.meta.textContent = d && d.at && text.trim() ? `Last edited ${fmt(d.at)}` : "";
+    });
+    document.getElementById("s" + pad(n)).classList.toggle("has-notes", any);
+  });
+  const wrap = document.getElementById("counts"); wrap.innerHTML = "";
+  BOXES.concat(counts.Others ? ["Others"] : []).forEach(b => {
+    const s = document.createElement("span"); s.className = "count"; s.style.cssText = authorVars(b === "Others" ? null : b);
+    s.textContent = `${b} ${counts[b]}`; s.title = `${b}: ${counts[b]} comment${counts[b] === 1 ? "" : "s"} and replies`;
+    wrap.append(s);
+  });
+  applyFilter();
+}
+function applyFilter() {
+  const only = document.getElementById("onlyNotes").checked;
+  document.querySelectorAll(".row").forEach(r => { r.hidden = only && !r.classList.contains("has-notes"); });
+}
+let polling = false;
+async function poll() {
+  if (polling) return; polling = true;
+  try {
+    const r = await api.getComments();
+    const next = {};
+    Object.keys(r.comments).forEach(k => {
+      const remote = r.comments[k], local = st.localAt[k];
+      next[k] = (local && remote.at < local) ? st.docs[k] : remote;   // never step back behind our own save
+    });
+    Object.keys(st.localAt).forEach(k => { if (!next[k] && st.docs[k]) next[k] = st.docs[k]; });
+    st.docs = next;
+    // Replies: the server list, plus our own posts it doesn't show yet, minus our deletes.
+    const seen = new Set();
+    Object.values(r.replies).forEach(list => list.forEach(x => seen.add(x.key)));
+    Object.values(st.localReplies).forEach(x => {
+      if (seen.has(x.key)) delete st.localReplies[x.key];
+      else (r.replies[x.parent] = r.replies[x.parent] || []).push({ key: x.key, author: x.author, text: x.text, at: x.at });
+    });
+    st.deleted.forEach(key => { if (!seen.has(key)) st.deleted.delete(key); });
+    Object.keys(r.replies).forEach(p => { r.replies[p] = r.replies[p].filter(x => !st.deleted.has(x.key)); });
+    st.replies = r.replies;
+    if (!st.loaded) { st.loaded = true; Object.values(els).forEach(e => { if (e.ta) e.ta.disabled = false; }); }
+    notice("");
+    render();
+  } catch (e) {
+    notice(st.loaded ? "Can't reach the comment sheet right now. Your typing is kept; it will save once the connection is back."
+                     : "Couldn't load comments. Reload the page to try again.", true);
+  } finally { polling = false; }
+}
+poll();
+setInterval(() => { if (document.visibilityState === "visible") poll(); }, POLL_MS);
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") poll(); });
+render();
+
+// ---------- chat with Claude ----------
+// Shown only to holders of a personal chat key (?c=..., remembered in this browser).
+// Messages go to the comment backend; Claude Code on the owner's computer answers
+// them and can change the slides. The author of a message comes from the key.
+const CHAT_KEY_STORE = "deck-review-chat";
+const CHAT_SEEN_STORE = "deck-review-chat-seen";
+const chat = { key: null, me: null, open: false, msgs: [], online: false, sig: "", timer: null, busy: false };
+(function initChatKey() {
+  const fromUrl = new URLSearchParams(location.search).get("c");
+  let k = fromUrl;
+  try { if (fromUrl) localStorage.setItem(CHAT_KEY_STORE, fromUrl); else k = localStorage.getItem(CHAT_KEY_STORE); } catch (e) {}
+  chat.key = k && k.length >= 20 ? k : null;
+})();
+const chatApi = {
+  async load() {
+    const r = await fetch(API + "?chat=1&k=" + encodeURIComponent(chat.key) + "&t=" + Date.now(), { credentials: "omit", cache: "no-store" });
+    return r.json();
+  },
+  send(text, slide) { return api.post({ op: "chat", k: chat.key, text, slide }); }
+};
+const currentSlide = () => {
+  const y = innerHeight * 0.35;
+  for (const r of document.querySelectorAll(".row")) {
+    if (r.hidden) continue;
+    const b = r.getBoundingClientRect();
+    if (b.top <= y && b.bottom > y) return +r.id.slice(1);
+  }
+  return 1;
+};
+const chatSeen = () => { try { return localStorage.getItem(CHAT_SEEN_STORE) || ""; } catch (e) { return ""; } };
+const chatMarkSeen = at => { try { localStorage.setItem(CHAT_SEEN_STORE, at); } catch (e) {} };
+const STATUS = {
+  "new": ["wait", () => chat.online ? "Waiting for Claude…" : "Queued: Claude is offline and will answer when back"],
+  "working": ["work", () => "Claude is working on it…"],
+  "needs-ok": ["wait", () => "Waiting for RL's OK"],
+  "declined": ["", () => "Not done (see reply)"],
+  "done": ["", () => "✓ Answered"]
+};
+function chatRender() {
+  const dot = chat.online ? "dot on" : "dot";
+  document.getElementById("chatDot").className = dot;
+  document.getElementById("chatDot2").className = dot;
+  document.getElementById("chatState").textContent = chat.online
+    ? `Online · you are ${chat.me}` : `Offline · messages wait until Claude is back · you are ${chat.me}`;
+  const lastClaude = chat.msgs.filter(m => m.role === "claude").map(m => m.at).sort().pop() || "";
+  const unread = chat.open ? 0 : chat.msgs.filter(m => m.role === "claude" && m.at > chatSeen()).length;
+  if (chat.open && lastClaude) chatMarkSeen(lastClaude);
+  const badge = document.getElementById("chatBadge");
+  badge.hidden = !unread; badge.textContent = unread;
+  const sig = chat.msgs.map(m => m.id + m.status).join("|") + chat.online;
+  if (sig === chat.sig) return;
+  chat.sig = sig;
+  const log = document.getElementById("chatLog"), atBottom = log.scrollHeight - log.scrollTop - log.clientHeight < 40;
+  log.innerHTML = "";
+  if (!chat.msgs.length) {
+    const p = document.createElement("div"); p.className = "chat-empty";
+    p.textContent = "Ask about a result, or ask for a change to a slide, e.g. “make the legend on this slide bigger”. "
+      + "Changes go live on this page within a few minutes; everyone with a chat link sees this conversation.";
+    log.append(p);
+  }
+  chat.msgs.forEach(m => {
+    const el = document.createElement("div");
+    el.className = "msg" + (m.role === "claude" ? " claude" : "") + (m.author === chat.me ? " mine" : "");
+    const h = document.createElement("div"); h.className = "h";
+    const who = document.createElement("b"); who.textContent = m.author;
+    const when = document.createElement("span"); when.textContent = fmt(m.at) + (m.slide ? ` · slide ${m.slide}` : "");
+    h.append(who, when);
+    const body = document.createElement("div"); body.className = "body"; body.textContent = m.text;
+    el.append(h, body);
+    if (m.role === "user" && STATUS[m.status]) {
+      const [cls, txt] = STATUS[m.status];
+      const st = document.createElement("div"); st.className = "st " + cls; st.textContent = txt();
+      el.append(st);
+    }
+    log.append(el);
+  });
+  if (atBottom || chat.open) log.scrollTop = log.scrollHeight;
+}
+async function chatPoll() {
+  if (chat.busy) return;
+  chat.busy = true;
+  try {
+    const j = await chatApi.load();
+    if (!j.ok) {   // refused (wrong or revoked key): forget it
+      chat.key = null; try { localStorage.removeItem(CHAT_KEY_STORE); } catch (e) {}
+      document.getElementById("chatFab").hidden = true; document.getElementById("chatPanel").hidden = true; return;
+    }
+    chat.me = j.me; chat.online = j.online; chat.msgs = j.messages;
+    chatRender();
+  } catch (e) { /* keep the last view; the next poll retries */ }
+  finally { chat.busy = false; }
+}
+function chatSchedule() {
+  clearTimeout(chat.timer);
+  chat.timer = setTimeout(async () => { if (document.visibilityState === "visible") await chatPoll(); chatSchedule(); },
+                          chat.open ? 4000 : 15000);
+}
+function chatOpen(open) {
+  chat.open = open;
+  document.getElementById("chatPanel").hidden = !open;
+  document.getElementById("chatFab").hidden = open || !chat.key;
+  if (open) {
+    document.getElementById("chatSlideN").textContent = currentSlide();
+    chat.sig = ""; chatRender(); chatPoll();
+    document.getElementById("chatInput").focus();
+  }
+  chatSchedule();
+}
+document.getElementById("chatFab").addEventListener("click", () => chatOpen(true));
+document.getElementById("chatClose").addEventListener("click", () => chatOpen(false));
+document.addEventListener("keydown", e => { if (e.key === "Escape" && chat.open && lb.hidden) chatOpen(false); });
+addEventListener("scroll", () => { if (chat.open) document.getElementById("chatSlideN").textContent = currentSlide(); }, { passive: true });
+const chatInput = document.getElementById("chatInput");
+chatInput.addEventListener("keydown", e => {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); document.getElementById("chatForm").requestSubmit(); }
+});
+document.getElementById("chatForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const text = chatInput.value.trim();
+  if (!text || !chat.key) return;
+  const send = document.getElementById("chatSend"), note = document.getElementById("chatNote");
+  const slide = document.getElementById("chatSlideOn").checked ? currentSlide() : "";
+  send.disabled = true; note.textContent = "";
+  try {
+    await chatApi.send(text, slide);
+    chatInput.value = "";
+    await chatPoll();
+  } catch (err) {
+    note.textContent = "Not sent. Check your connection and try again; your text is still here.";
+  } finally { send.disabled = false; chatInput.focus(); }
+});
+(async function chatStart() {
+  if (!chat.key) return;
+  await chatPoll();
+  if (!chat.key) return;                       // the key was refused
+  if (chat.me && BOXES.includes(chat.me) && me !== chat.me) { choose(chat.me); }   // the key says who this is
+  document.getElementById("landing").hidden = true;
+  document.getElementById("chatFab").hidden = false;
+  chatSchedule();
+})();
+
+// ---------- lightbox ----------
+const lb = document.getElementById("lb"), lbImgWrap = document.getElementById("lbImg"), lbImg = lbImgWrap.querySelector("img");
+const lbFrame = document.getElementById("lbFrame");
+let lbN = 1, lastFocus = null;
+function openLb(n) {
+  if (lb.hidden) lastFocus = document.activeElement;
+  lbN = n; lbImgWrap.classList.remove("full");
+  lbImg.src = imgOf(n); lbImg.alt = `Slide ${n}: ${SLIDES[n - 1]}`;
+  addSpots(lbFrame, n, true);
+  document.getElementById("lbTitle").textContent = `Slide ${n} · ${SLIDES[n - 1]} — click the image for full size`;
+  lb.hidden = false; document.getElementById("lbClose").focus();
+}
+function closeLb() { lb.hidden = true; if (lastFocus) lastFocus.focus(); }
+lbImg.addEventListener("click", () => lbImgWrap.classList.toggle("full"));
+document.getElementById("lbClose").addEventListener("click", closeLb);
+document.getElementById("lbPrev").addEventListener("click", () => lbN > 1 && openLb(lbN - 1));
+document.getElementById("lbNext").addEventListener("click", () => lbN < SLIDES.length && openLb(lbN + 1));
+document.addEventListener("keydown", e => {
+  if (lb.hidden) return;
+  if (e.key === "Escape") closeLb();
+  else if (e.key === "ArrowLeft" && lbN > 1) openLb(lbN - 1);
+  else if (e.key === "ArrowRight" && lbN < SLIDES.length) openLb(lbN + 1);
+});
+</script>
+</body>
+</html>
